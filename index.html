@@ -13,6 +13,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="stylesheet.css">
+
+  <style>
+    .skill-chip{display:inline-block; margin:.2rem .35rem .2rem 0; padding:.16rem .56rem; border:1px solid rgba(127,146,255,.35); border-radius:999px; font-size:.82rem; transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;}
+    .skill-chip:hover{transform:translateY(-2px) scale(1.03); box-shadow:0 6px 16px rgba(100,120,255,.22); border-color:rgba(140,160,255,.7)}
+    .control-panel{display:flex;flex-wrap:wrap;gap:.55rem;align-items:center;margin:0 0 1rem 0}
+    .control-btn{border:1px solid rgba(127,146,255,.45);background:transparent;color:inherit;padding:.45rem .7rem;border-radius:10px;cursor:pointer;font:inherit}
+    .control-btn.active{background:rgba(120,140,255,.15);border-color:rgba(120,140,255,.8)}
+    body.recruiter-mode #news{display:none}
+    body.recruiter-mode .lead:last-of-type{display:none}
+    body.recruiter-mode .pub-card img{max-height:150px;object-fit:cover}
+  </style>
+
 </head>
 
 <body>
@@ -113,6 +125,15 @@
           </article>
         </div>
       </aside>
+    </section>
+
+    <section class="module reveal" aria-label="Portfolio controls" style="padding-top:.4rem;">
+      <div class="control-panel">
+        <button id="recruiter-toggle" class="control-btn" type="button" aria-pressed="false">Recruiter Mode: Off</button>
+        <button id="filter-all" class="control-btn active" type="button" data-filter="all">All Modules</button>
+        <span style="opacity:.75; font-size:.92rem;">Filter project/publication cards by skill:</span>
+        <div id="skill-filters" class="control-panel" style="margin:0;"></div>
+      </div>
     </section>
 
     <section id="news" class="module section-block reveal">
@@ -474,6 +495,79 @@
     };
 
     renderSkillsOS();
+
+
+
+    const inferTags = (title) => {
+      const t = title.toLowerCase();
+      const tags = [];
+      if (/jetson|tensorrt|edge/.test(t)) tags.push('Edge AI');
+      if (/pid|control|hilde/.test(t)) tags.push('Controls');
+      if (/drive|vision|camera|benchmark/.test(t)) tags.push('Perception');
+      if (/rover|robot|autonomous/.test(t)) tags.push('Robotics');
+      if (/fifa|prediction/.test(t)) tags.push('ML');
+      if (!tags.length) tags.push('Systems');
+      return tags;
+    };
+
+    const setupCardFilters = () => {
+      const cards = [...document.querySelectorAll('.pub-card')];
+      const filterWrap = document.getElementById('skill-filters');
+      const allBtn = document.getElementById('filter-all');
+      if (!cards.length || !filterWrap || !allBtn) return;
+
+      const allTags = new Set();
+      cards.forEach((card) => {
+        const title = card.querySelector('h3')?.textContent || '';
+        const tags = inferTags(title);
+        card.dataset.tags = tags.join(',');
+        tags.forEach(t => allTags.add(t));
+        const meta = card.querySelector('.pub-meta');
+        if (meta) {
+          const chips = document.createElement('p');
+          chips.style.margin = '.45rem 0 0';
+          chips.innerHTML = tags.map(tag => `<span class="skill-chip">${tag}</span>`).join('');
+          meta.insertAdjacentElement('afterend', chips);
+        }
+      });
+
+      [...allTags].sort().forEach((tag) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'control-btn';
+        b.dataset.filter = tag;
+        b.textContent = tag;
+        filterWrap.appendChild(b);
+      });
+
+      const setActive = (filter) => {
+        document.querySelectorAll('[data-filter]').forEach((btn) => btn.classList.toggle('active', btn.dataset.filter === filter));
+        cards.forEach((card) => {
+          const tags = (card.dataset.tags || '').split(',');
+          card.style.display = filter === 'all' || tags.includes(filter) ? '' : 'none';
+        });
+      };
+
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-filter]');
+        if (!btn) return;
+        setActive(btn.dataset.filter || 'all');
+      });
+      setActive('all');
+    };
+
+    const setupRecruiterMode = () => {
+      const btn = document.getElementById('recruiter-toggle');
+      if (!btn) return;
+      btn.addEventListener('click', () => {
+        const on = document.body.classList.toggle('recruiter-mode');
+        btn.textContent = `Recruiter Mode: ${on ? 'On' : 'Off'}`;
+        btn.setAttribute('aria-pressed', String(on));
+      });
+    };
+
+    setupCardFilters();
+    setupRecruiterMode();
 
     const storedTheme = localStorage.getItem(themeStorageKey);
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
