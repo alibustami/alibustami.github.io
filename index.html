@@ -25,6 +25,7 @@
         <a href="#news">News</a>
         <a href="#publications">Publications</a>
         <a href="#experience">Experience</a>
+        <a href="#skills">Skills</a>
         <a href="#certifications">Certifications</a>
       </nav>
       <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">
@@ -267,9 +268,30 @@
       </div>
     </section>
 
-    <section id="certifications" class="module section-block reveal">
+    <section id="skills" class="module section-block reveal">
       <header class="section-head">
         <p class="section-index">[04]</p>
+        <h2>Skills Operating System</h2>
+      </header>
+
+      <p class="lead" style="margin-top:0; margin-bottom:1rem;">
+        A modular map of the stack I use to ship robotics systems from sensor wiring to deployed autonomy.
+      </p>
+
+      <div id="skills-orbit" class="link-grid" aria-label="Skills category overview" style="margin-bottom: 1rem;"></div>
+
+      <div id="skills-modules" class="cert-grid" aria-label="Detailed skills modules"></div>
+
+      <article class="module" style="margin-top: 1rem; padding: 1rem 1.25rem; border-radius: 14px; border: 1px dashed rgba(120,140,255,.35);">
+        <h3 style="margin-top:0;">System Pipeline</h3>
+        <p style="margin:.25rem 0 0; opacity:.92;">Sensor Ingestion → Perception → Planning/Control → Edge Deployment → Monitoring</p>
+        <div id="skills-pipeline" class="card-links" style="margin-top:.65rem;"></div>
+      </article>
+    </section>
+
+    <section id="certifications" class="module section-block reveal">
+      <header class="section-head">
+        <p class="section-index">[05]</p>
         <h2>Licenses and Certifications</h2>
       </header>
 
@@ -354,6 +376,104 @@
         label.textContent = isDark ? 'Light Mode' : 'Dark Mode';
       }
     };
+
+
+
+    const skillsBlueprint = [
+      {
+        icon: '🛞',
+        domain: 'Robotics & Controls',
+        level: 'Advanced',
+        summary: 'Control + autonomy stack for mobile robots under real-world constraints.',
+        stack: ['ROS 2', 'Nav2', 'SLAM Toolbox', 'PID Auto-Tuning', 'MPC', 'A* / RRT', 'EKF/UKF']
+      },
+      {
+        icon: '👁️',
+        domain: 'Perception & Vision',
+        level: 'Advanced',
+        summary: 'Camera/LiDAR/IMU fusion pipelines with geometry-aware evaluation.',
+        stack: ['PyTorch', 'OpenCV', 'YOLO', 'ViT/CLIP', '3D Point Clouds', 'Homography', 'Multi-view Geometry']
+      },
+      {
+        icon: '🛰️',
+        domain: 'VLM / VLA / VLN Systems',
+        level: 'Advanced',
+        summary: 'Multimodal agents that connect language, vision, and action for robot decision loops.',
+        stack: ['Vision-Language Models (VLM)', 'Vision-Language-Action (VLA)', 'Vision-Language-Navigation (VLN)', 'Instruction Grounding', 'Embodied Reasoning', 'Policy Conditioning']
+      },
+      {
+        icon: '🧪',
+        domain: 'Simulation & Synthetic Data',
+        level: 'Advanced',
+        summary: 'Digital twins and domain randomization to de-risk field deployment.',
+        stack: ['Isaac Sim', 'Omniverse', 'Gazebo', 'Blender', 'Synthetic Data', 'Physics Simulation']
+      },
+      {
+        icon: '⚡',
+        domain: 'NVIDIA Jetson & Edge Deployment',
+        level: 'Advanced',
+        summary: 'From model optimization to real-time deployment on embedded robotics hardware.',
+        stack: ['Jetson Nano/Orin', 'TensorRT', 'CUDA', 'DeepStream', 'ONNX Runtime', 'Quantization (INT8/FP16)', 'Edge Telemetry']
+      },
+      {
+        icon: '🧠',
+        domain: 'LLM / VLM Fine-Tuning',
+        level: 'Advanced',
+        summary: 'Parameter-efficient adaptation pipelines for domain-specific robotics and multimodal tasks.',
+        stack: ['LoRA/QLoRA', 'SFT', 'Instruction Tuning', 'Dataset Curation', 'Evaluation Harnesses', 'Prompt/Adapter Iteration', 'Inference Optimization']
+      },
+      {
+        icon: '🧱',
+        domain: 'ML Systems & Backend',
+        level: 'Advanced',
+        summary: 'Production-grade APIs and MLOps workflows for reliability at scale.',
+        stack: ['FastAPI', 'Docker', 'Kubernetes', 'MLflow', 'CI/CD', 'AWS SageMaker', 'Azure ML', 'GCP']
+      },
+      {
+        icon: '🛠️',
+        domain: 'Languages & Core',
+        level: 'Advanced',
+        summary: 'Practical engineering toolbox for modular robotics software.',
+        stack: ['Python', 'C++14/17', 'MATLAB', 'Bash', 'SQL', 'Linux', 'Git']
+      }
+    ];
+
+    const renderSkillsOS = () => {
+      const orbit = document.getElementById('skills-orbit');
+      const modules = document.getElementById('skills-modules');
+      const pipeline = document.getElementById('skills-pipeline');
+      if (!orbit || !modules || !pipeline) return;
+
+      orbit.innerHTML = skillsBlueprint
+        .map(({ icon, domain, level }) => `<li><a href="#skills" aria-label="${domain}"><span>${icon} ${domain}</span><span style="opacity:.7; font-size:.85em;">${level}</span></a></li>`)
+        .join('');
+
+      modules.innerHTML = skillsBlueprint
+        .map(({ icon, domain, summary, stack, level }) => `
+          <article class="cert-card">
+            <h3 style="display:flex; justify-content:space-between; gap:.75rem; align-items:center; margin-bottom:.4rem;">
+              <span>${icon} ${domain}</span>
+              <span style="font-size:.72em; letter-spacing:.08em; opacity:.72; text-transform:uppercase;">${level}</span>
+            </h3>
+            <p style="margin-top:0;">${summary}</p>
+            <p style="margin-bottom:0; line-height:1.8;">
+              ${stack.map(item => `<span style="display:inline-block; margin:.15rem .3rem .15rem 0; padding:.12rem .5rem; border:1px solid rgba(127,146,255,.35); border-radius:999px; font-size:.88em;">${item}</span>`).join('')}
+            </p>
+          </article>
+        `)
+        .join('');
+
+      pipeline.innerHTML = [
+        'Camera / LiDAR / IMU',
+        'VLM/LLM Perception + Representation',
+        'Localization + Trajectory Planning',
+        'Controller Optimization (PID / MPC)',
+        'Jetson Deployment + Runtime Optimization',
+        'Telemetry + Iterative Improvement'
+      ].map(step => `<span style="display:inline-block; margin:.2rem .3rem .2rem 0;">${step}</span>`).join('<span aria-hidden="true"> → </span>');
+    };
+
+    renderSkillsOS();
 
     const storedTheme = localStorage.getItem(themeStorageKey);
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
