@@ -152,6 +152,7 @@
       </header>
 
       <ul class="news-list">
+        <li><span class="news-date">03/2026</span> Paper accepted at <a href="https://ieeesoutheastcon.org/" target="_blank" rel="noopener noreferrer">IEEE SoutheastCon 2026</a>.</li>
         <li><span class="news-date">01/2026</span> Published <a href="https://github.com/alibustami/Jetsonizer" target="_blank" rel="noopener noreferrer">Jetsonizer</a>, a CLI toolkit for NVIDIA Jetson setup, with <a href="https://doi.org/10.5281/zenodo.18181257" target="_blank" rel="noopener noreferrer">Zenodo DOI</a>.</li>
         <li><span class="news-date">11/2025</span> Judged and mentored at Columbia University Robotics Hackathon <a href="https://www.makecu.dev/" target="_blank" rel="noopener noreferrer">MakeCU</a>.</li>
         <li><span class="news-date">05/2025</span> Paper accepted at <a href="http://www.ieee-arm.org/" target="_blank" rel="noopener noreferrer">IEEE ARM</a>.</li>
@@ -168,6 +169,18 @@
       </header>
 
       <div class="pub-grid">
+        <article class="pub-card">
+          <img src="images/llm-tools-planning-workflow.png" alt="LLM planning-and-tools evaluation workflow from the paper">
+          <div class="pub-content">
+            <h3>When Do Tools and Planning Help Large Language Models Think? A Cost- and Latency-Aware Benchmark</h3>
+            <p class="pub-meta">Subha Goshal, Ali Al-Bustami | IEEE SoutheastCon 2026</p>
+            <p style="margin:.45rem 0 0; font-size:.92rem; opacity:.92;">Benchmarks one-shot prompting vs plan-execute-replan with tools on Event-QA and CMV, quantifying the accuracy/latency trade-off and showing when tool orchestration helps or hurts.</p>
+            <div class="card-links">
+              <a href="https://arxiv.org/abs/2601.02663" target="_blank" rel="noopener noreferrer">arXiv</a>
+            </div>
+          </div>
+        </article>
+
         <article class="pub-card">
           <img src="images/jetsonizer.gif" alt="Jetsonizer installation workflow demo">
           <div class="pub-content">
@@ -512,7 +525,8 @@
       const tags = [];
       if (/jetson|tensorrt|edge/.test(t)) tags.push('Edge AI');
       if (/pid|control|hilde/.test(t)) tags.push('Controls');
-      if (/drive|vision|camera|benchmark/.test(t)) tags.push('Perception');
+      if (/llm|large language|tools|planning/.test(t)) tags.push('ML');
+      if (/drive|vision|camera|benchmark/.test(t) && !/llm|large language|tools|planning/.test(t)) tags.push('Perception');
       if (/rover|robot|autonomous/.test(t)) tags.push('Robotics');
       if (/fifa|prediction/.test(t)) tags.push('ML');
       if (!tags.length) tags.push('Systems');
